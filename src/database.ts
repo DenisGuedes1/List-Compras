@@ -1,5 +1,5 @@
-import { Listnew } from "./interface";
+import { iClientID } from "./interface";
 
-const clients: Listnew[] = [];
+const clients: iClientID[] = [];
 const ids: Array<number> = [];
 export { clients, ids };

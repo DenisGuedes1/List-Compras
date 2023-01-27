@@ -1,15 +1,18 @@
 interface Client {
-  nome: string;
-  valor: string;
-  quantidade: string;
-}
-type ClienteRequiredKeys = "nome" | "valor" | "quantidade";
-// interface IdClient extends Client {
-//   id: number;
-// }
-interface Listnew extends Client {
-  id: number;
   listName: string;
-  data: Client[];
+  data: [iList];
 }
-export { Client, Listnew, ClienteRequiredKeys };
+
+interface iList {
+  name: string;
+  quantity: string;
+  price: number;
+}
+
+interface iClientID extends Client {
+  id: number;
+}
+
+type listRequeridData = "listName" | "data";
+
+export { Client, iList, iClientID, listRequeridData };

@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, response } from "express";
 import { clients, ids } from "./database";
-import { Client, ClienteRequiredKeys, Listnew } from "./interface";
+import { Client, iClientID, listRequeridData } from "./interface";
 
 const validateData = (payload: any): Client => {
   const payloadKeys: string[] = Object.keys(payload);
-  const requiredKeys: ClienteRequiredKeys[] = ["nome", "quantidade", "valor"];
+  const requiredKeys: listRequeridData[] = ["listName", "data"];
   const hasRequiredKeys: boolean = requiredKeys.every((key: string) =>
     payloadKeys.includes(key)
   );
@@ -12,6 +12,33 @@ const validateData = (payload: any): Client => {
     const joinedKeys: string = requiredKeys.join(", ");
     throw new Error(`Required keys are: ${joinedKeys}.`);
   }
+  const { nome, quantidade, valor, list } = payload;
+  return payload;
+};
+const validadeDate = (payload: any): Client => {
+  const keysPayload: Array<string> = Object.keys(payload);
+  const requiredKeys: Array<listRequeridData> = ["listName", "data"];
+
+  const hasRequiredKeeys: boolean = requiredKeys.every((key: string) => {
+    return keysPayload.includes(key);
+  });
+
+  if (!hasRequiredKeeys) {
+    const JoinedKeys: string = requiredKeys.join(", ");
+    throw new Error(`Required keys are: ${JoinedKeys}.`);
+  }
+  // if (!requiredKeys) {
+  //   const JoinedKeys: string = requiredKeys.join(", ");
+  //   throw new Error(`Required keys are: ${JoinedKeys}.`);
+  // }
+
+  keysPayload.forEach((key: any) => {
+    if (!requiredKeys.includes(key)) {
+      return response.status(400).json({
+        message: "Listname and data they are only necessary ",
+      });
+    }
+  });
   return payload;
 };
 
@@ -19,16 +46,16 @@ const createClient = (request: Request, response: Response): Response => {
   try {
     let currentId = 1;
     console.log(currentId);
-    function incrementId(arr: Listnew[]): number {
+    function incrementId(arr: iClientID[]): number {
       if (!arr.length) {
         return 1;
       }
-      const currentId: Listnew = arr
+      const currentId: iClientID = arr
         .sort((idInicial, idFinal) => idInicial.id - idFinal.id)
-        .pop() as Listnew;
+        .pop() as iClientID;
       return currentId.id + 1;
     }
-    // const validatedData: clients = validateData(request.body);
+    const validate: Client = validadeDate(request.body);
 
     // let id: number = Math.floor(Math.random() * 1000);
     let idExists = ids.find((element) => element === currentId);
@@ -38,13 +65,13 @@ const createClient = (request: Request, response: Response): Response => {
       });
     }
     const newID: number = incrementId(clients);
-    const newArray: Listnew = {
+    const newArray: iClientID = {
       id: newID,
-      ...request.body,
+      ...validate,
     };
     clients.push(newArray);
     console.log(ids);
-
+    console.log(clients);
     return response.status(201).json(newArray);
   } catch (error) {
     if (error instanceof Error) {
@@ -61,27 +88,8 @@ const readClients = (request: Request, response: Response): Response => {
   return response.status(200).json(clients);
 };
 
-const midleWare = (
-  request: Request,
-  response: Response,
-  next: NextFunction
-): Response | void => {
-  console.log(request);
-  console.log(response);
-  if (request.body.length === 3) {
-    return response.status(400).json({
-      message: " status indefinidios",
-    });
-  }
-  return next();
-};
 
-// const retrieveWorkOrder = (request: Request, response: Response): Response => {
-//   const id: number = request.newListIndex.indexArray;
 
-//   return response.json(clients[id]);
-// };
-// console.log(retrieveWorkOrder);
 // const deleteItem = (request: Request, response: Response): Response => {
 //   const indexArray: number = request.newListIndex.indexArray;
 //   console.log(indexArray);
@@ -97,4 +105,6 @@ const midleWare = (
 
 //   return response.status(204).send();
 // };
-export { createClient, readClients, midleWare };
+
+export { createClient, readClients };
+
