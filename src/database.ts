@@ -1,5 +1,5 @@
-import { Client } from "./interface";
+import { Listnew } from "./interface";
 
-const clients: Client[] = [];
-
-export default clients;
+const clients: Listnew[] = [];
+const ids: Array<number> = [];
+export { clients, ids };

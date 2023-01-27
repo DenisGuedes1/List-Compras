@@ -1,7 +1,15 @@
 interface Client {
-  name: string;
-  email: string;
-  cpf: string;
+  nome: string;
+  valor: string;
+  quantidade: string;
 }
-
-export { Client };
+type ClienteRequiredKeys = "nome" | "valor" | "quantidade";
+// interface IdClient extends Client {
+//   id: number;
+// }
+interface Listnew extends Client {
+  id: number;
+  listName: string;
+  data: Client[];
+}
+export { Client, Listnew, ClienteRequiredKeys };
