@@ -12,7 +12,7 @@ const validateData = (payload: any): Client => {
     const joinedKeys: string = requiredKeys.join(", ");
     throw new Error(`Required keys are: ${joinedKeys}.`);
   }
-  const { nome, quantidade, valor, list } = payload;
+
   return payload;
 };
 const validadeDate = (payload: any): Client => {
@@ -27,10 +27,6 @@ const validadeDate = (payload: any): Client => {
     const JoinedKeys: string = requiredKeys.join(", ");
     throw new Error(`Required keys are: ${JoinedKeys}.`);
   }
-  // if (!requiredKeys) {
-  //   const JoinedKeys: string = requiredKeys.join(", ");
-  //   throw new Error(`Required keys are: ${JoinedKeys}.`);
-  // }
 
   keysPayload.forEach((key: any) => {
     if (!requiredKeys.includes(key)) {
@@ -46,6 +42,7 @@ const createClient = (request: Request, response: Response): Response => {
   try {
     let currentId = 1;
     console.log(currentId);
+
     function incrementId(arr: iClientID[]): number {
       if (!arr.length) {
         return 1;
@@ -55,9 +52,9 @@ const createClient = (request: Request, response: Response): Response => {
         .pop() as iClientID;
       return currentId.id + 1;
     }
-    const validate: Client = validadeDate(request.body);
+    const validate: Client = validateData(request.body);
+    console.log("console validade", validate);
 
-    // let id: number = Math.floor(Math.random() * 1000);
     let idExists = ids.find((element) => element === currentId);
     if (idExists) {
       return response.status(409).json({
@@ -69,9 +66,12 @@ const createClient = (request: Request, response: Response): Response => {
       id: newID,
       ...validate,
     };
+    console.log("eu sou o console do new ARRAY", newArray);
+    console.log("eu sou o console do clients", clients);
     clients.push(newArray);
-    console.log(ids);
-    console.log(clients);
+    clients.push(newArray);
+
+    console.log("hooi", validate);
     return response.status(201).json(newArray);
   } catch (error) {
     if (error instanceof Error) {
@@ -85,10 +85,9 @@ const createClient = (request: Request, response: Response): Response => {
   }
 };
 const readClients = (request: Request, response: Response): Response => {
+  console.log("eu  sou o console da request", request);
   return response.status(200).json(clients);
 };
-
-
 
 // const deleteItem = (request: Request, response: Response): Response => {
 //   const indexArray: number = request.newListIndex.indexArray;
@@ -107,4 +106,3 @@ const readClients = (request: Request, response: Response): Response => {
 // };
 
 export { createClient, readClients };
-

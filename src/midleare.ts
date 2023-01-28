@@ -29,10 +29,13 @@ const verifyStringOrNumberValor = (
   response: Response,
   next: NextFunction
 ): Response | void => {
-  if (isNaN(request.body.data.price)) {
-    return console.log(request.body.data.price);
+  if (
+    typeof request.body.data.price === "number" &&
+    !isNaN(request.body.data.price)
+  ) {
+    return console.log(request.body.price);
   } else {
-    return next();
+    response.status(400).send({ error: "Price deve ser um número" });
   }
 };
 
