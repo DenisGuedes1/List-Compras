@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { clients } from "./database";
 
 const midleWare = (
   request: Request,
@@ -38,5 +39,34 @@ const verifyStringOrNumberValor = (
     response.status(400).send({ error: "Price deve ser um número" });
   }
 };
+const verifyExistencieList = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Response | void => {
+  const id: number = parseInt(request.params.id);
 
-export { midleWare, verifyStringOrNumber, verifyStringOrNumberValor };
+  const indexArrayClient = clients.findIndex((el) => el.id === id);
+  if (indexArrayClient === -1) {
+    return response.status(404).json({
+      message: "Purchase list not found!",
+    });
+  }
+
+  request.listIndex = {
+    indexArrayClient: indexArrayClient,
+  };
+
+  const { listName, data } = request.body;
+
+  request.validateClientList = { listName, data };
+
+  return next();
+};
+
+export {
+  midleWare,
+  verifyStringOrNumber,
+  verifyStringOrNumberValor,
+  verifyExistencieList,
+};

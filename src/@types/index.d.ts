@@ -4,7 +4,7 @@ import { Client } from "../interface";
 declare global {
   namespace Express {
     interface Request {
-      purchaseList: {
+      listIndex: {
         indexArrayClient: number;
       };
       validateClientList: {

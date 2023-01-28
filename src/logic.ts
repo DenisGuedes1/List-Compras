@@ -89,14 +89,14 @@ const readClients = (request: Request, response: Response): Response => {
   return response.status(200).json(clients);
 };
 
-// const deleteItem = (request: Request, response: Response): Response => {
-//   const indexArray: number = request.newListIndex.indexArray;
-//   console.log(indexArray);
+const deleteItem = (request: Request, response: Response): Response => {
+  // const indexArray: number = request
+  console.log("oi eu sou o console da request DeleteItem", request);
 
-//   clients.splice(indexArray, 1);
+  // clients.splice(indexArray, 1);
 
-//   return response.status(204).send();
-
+  return response.status(204).send();
+};
 // const deleteItem = (request: Request, response: Response): Response => {
 //   // const indexWorkOrder: number = request..indexWorkOrder
 
@@ -105,4 +105,4 @@ const readClients = (request: Request, response: Response): Response => {
 //   return response.status(204).send();
 // };
 
-export { createClient, readClients };
+export { createClient, readClients, deleteItem };
