@@ -79,9 +79,15 @@ const deleteListCompleted = (
 
   return response.status(204).send();
 };
-// const deleteItemList = (request: Request, response: Response): Response => {
-//   const indexList: number = request.listIndex.indexArrayClient;
+const deleteItemList = (request: Request, response: Response): Response => {
+  const indexList: number = request.listIndex.indexArrayClient;
 
-//   return response.json(clients[indexList]);
+  return response.json(clients[indexList]);
+};
+const getOneListId = (request: Request, response: Response): Response => {
+  const indexPurchaseList: number = request.listIndex.indexArrayClient;
 
-export { createClient, readClients, deleteListCompleted };
+  return response.json(clients[indexPurchaseList]);
+};
+
+export { createClient, readClients, deleteListCompleted, getOneListId };

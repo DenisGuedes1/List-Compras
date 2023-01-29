@@ -47,7 +47,9 @@ const verifyExistencieList = (
 ): Response | void => {
   const id: number = parseInt(request.params.id);
 
-  const indexArrayClient = clients.findIndex((el) => el.id === id);
+  const indexArrayClient = clients.findIndex(
+    (elementList) => elementList.id === id
+  );
   console.log("indexArrayClient", indexArrayClient);
   if (indexArrayClient === -1) {
     return response.status(404).json({
