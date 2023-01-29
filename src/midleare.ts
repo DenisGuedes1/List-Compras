@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+
 import { clients } from "./database";
 
 const midleWare = (
@@ -47,9 +48,10 @@ const verifyExistencieList = (
   const id: number = parseInt(request.params.id);
 
   const indexArrayClient = clients.findIndex((el) => el.id === id);
+  console.log("indexArrayClient", indexArrayClient);
   if (indexArrayClient === -1) {
     return response.status(404).json({
-      message: "Purchase list not found!",
+      message: "Lista nao existe",
     });
   }
 
@@ -59,7 +61,7 @@ const verifyExistencieList = (
 
   const { listName, data } = request.body;
 
-  request.validateClientList = { listName, data };
+  request.validateClientList = { id, listName, data };
 
   return next();
 };

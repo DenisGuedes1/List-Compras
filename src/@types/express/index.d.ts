@@ -1,6 +1,5 @@
-import * as express from "express";
-import { Client } from "../interface";
-
+import { Client } from "../../interface";
+declare module "*";
 declare global {
   namespace Express {
     interface Request {
@@ -8,10 +7,10 @@ declare global {
         indexArrayClient: number;
       };
       validateClientList: {
+        id: number;
         listName: string;
         data: [Client];
       };
     }
   }
 }
-export { express };

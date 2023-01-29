@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import { clients, ids } from "./database";
 import { Client, iClientID, listRequeridData } from "./interface";
 
@@ -15,33 +15,10 @@ const validateData = (payload: any): Client => {
 
   return payload;
 };
-const validadeDate = (payload: any): Client => {
-  const keysPayload: Array<string> = Object.keys(payload);
-  const requiredKeys: Array<listRequeridData> = ["listName", "data"];
-
-  const hasRequiredKeeys: boolean = requiredKeys.every((key: string) => {
-    return keysPayload.includes(key);
-  });
-
-  if (!hasRequiredKeeys) {
-    const JoinedKeys: string = requiredKeys.join(", ");
-    throw new Error(`Required keys are: ${JoinedKeys}.`);
-  }
-
-  keysPayload.forEach((key: any) => {
-    if (!requiredKeys.includes(key)) {
-      return response.status(400).json({
-        message: "Listname and data they are only necessary ",
-      });
-    }
-  });
-  return payload;
-};
 
 const createClient = (request: Request, response: Response): Response => {
   try {
     let currentId = 1;
-    console.log(currentId);
 
     function incrementId(arr: iClientID[]): number {
       if (!arr.length) {
@@ -50,28 +27,27 @@ const createClient = (request: Request, response: Response): Response => {
       const currentId: iClientID = arr
         .sort((idInicial, idFinal) => idInicial.id - idFinal.id)
         .pop() as iClientID;
+
       return currentId.id + 1;
     }
     const validate: Client = validateData(request.body);
     console.log("console validade", validate);
 
     let idExists = ids.find((element) => element === currentId);
+    console.log("eu sou o console do id", idExists);
     if (idExists) {
       return response.status(409).json({
         message: "id existente",
       });
     }
     const newID: number = incrementId(clients);
+
     const newArray: iClientID = {
       id: newID,
       ...validate,
     };
-    console.log("eu sou o console do new ARRAY", newArray);
-    console.log("eu sou o console do clients", clients);
     clients.push(newArray);
     clients.push(newArray);
-
-    console.log("hooi", validate);
     return response.status(201).json(newArray);
   } catch (error) {
     if (error instanceof Error) {
@@ -85,24 +61,27 @@ const createClient = (request: Request, response: Response): Response => {
   }
 };
 const readClients = (request: Request, response: Response): Response => {
-  console.log("eu  sou o console da request", request);
+  console.log("console log clients do get ", clients);
   return response.status(200).json(clients);
 };
+const deleteListCompleted = (
+  request: Request,
+  response: Response
+): Response => {
+  const indexArray: number = request.listIndex.indexArrayClient;
 
-const deleteItem = (request: Request, response: Response): Response => {
-  // const indexArray: number = request
-  console.log("oi eu sou o console da request DeleteItem", request);
+  console.log(
+    "oi eu sou o console da request DeleteItem",
+    request.listIndex.indexArrayClient
+  );
 
-  // clients.splice(indexArray, 1);
+  clients.splice(indexArray, 1);
 
   return response.status(204).send();
 };
-// const deleteItem = (request: Request, response: Response): Response => {
-//   // const indexWorkOrder: number = request..indexWorkOrder
+// const deleteItemList = (request: Request, response: Response): Response => {
+//   const indexList: number = request.listIndex.indexArrayClient;
 
-//   // clients.splice(indexWorkOrder, 1)
+//   return response.json(clients[indexList]);
 
-//   return response.status(204).send();
-// };
-
-export { createClient, readClients, deleteItem };
+export { createClient, readClients, deleteListCompleted };

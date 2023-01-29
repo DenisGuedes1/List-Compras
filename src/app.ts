@@ -1,5 +1,5 @@
 import express, { Application, json } from "express";
-import { createClient, deleteItem, readClients } from "./logic";
+import { createClient, deleteListCompleted, readClients } from "./logic";
 import {
   midleWare,
   verifyExistencieList,
@@ -10,8 +10,8 @@ const app: Application = express();
 app.use(json());
 
 app.post("/purchaseList", midleWare, verifyStringOrNumber, createClient);
-app.get("/purchaseListall", readClients);
-app.delete("/purchaseList/:id", verifyExistencieList, deleteItem);
+app.get("/purchaseListall", midleWare, readClients);
+app.delete("/purchaseList/:id", verifyExistencieList, deleteListCompleted);
 
 const PORT: number = 3000;
 const runningMsg: string = `Server running on http://localhost:${PORT}`;
