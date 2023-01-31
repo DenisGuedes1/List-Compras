@@ -1,12 +1,12 @@
 interface Client {
   listName: string;
-  data: [iList];
+  data: iList[];
 }
 
 interface iList {
+  id: number;
   name: string;
   quantity: string;
-  price: number;
 }
 
 interface iClientID extends Client {

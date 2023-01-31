@@ -67,10 +67,46 @@ const verifyExistencieList = (
 
   return next();
 };
+const seachIndexList = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Response | void => {
+  const id: number = parseInt(request.params.id);
 
+  const indexList: number = clients.findIndex((el) => el.id === id);
+
+  console.log(indexList);
+
+  if (indexList === -1) {
+    return response.status(404).json({
+      message: "lista não encontrada",
+    });
+  }
+
+  request.listIndex = {
+    indexArrayClient: indexList,
+  };
+
+  return next();
+};
+const veifybodyOrString = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Response | void => {
+  if (typeof request.body.data !== "string") {
+    return response.status(400).json({
+      message: "verifique se não esta passando numeros ao inves de textos",
+    });
+  }
+  return next();
+};
 export {
   midleWare,
   verifyStringOrNumber,
   verifyStringOrNumberValor,
   verifyExistencieList,
+  seachIndexList,
+  veifybodyOrString,
 };

@@ -31,10 +31,9 @@ const createClient = (request: Request, response: Response): Response => {
       return currentId.id + 1;
     }
     const validate: Client = validateData(request.body);
-    console.log("console validade", validate);
 
     let idExists = ids.find((element) => element === currentId);
-    console.log("eu sou o console do id", idExists);
+
     if (idExists) {
       return response.status(409).json({
         message: "id existente",
@@ -48,6 +47,7 @@ const createClient = (request: Request, response: Response): Response => {
     };
     clients.push(newArray);
     clients.push(newArray);
+
     return response.status(201).json(newArray);
   } catch (error) {
     if (error instanceof Error) {
@@ -61,7 +61,6 @@ const createClient = (request: Request, response: Response): Response => {
   }
 };
 const readClients = (request: Request, response: Response): Response => {
-  console.log("console log clients do get ", clients);
   return response.status(200).json(clients);
 };
 const deleteListCompleted = (
@@ -70,24 +69,43 @@ const deleteListCompleted = (
 ): Response => {
   const indexArray: number = request.listIndex.indexArrayClient;
 
-  console.log(
-    "oi eu sou o console da request DeleteItem",
-    request.listIndex.indexArrayClient
-  );
-
   clients.splice(indexArray, 1);
 
   return response.status(204).send();
-};
-const deleteItemList = (request: Request, response: Response): Response => {
-  const indexList: number = request.listIndex.indexArrayClient;
-
-  return response.json(clients[indexList]);
 };
 const getOneListId = (request: Request, response: Response): Response => {
   const indexPurchaseList: number = request.listIndex.indexArrayClient;
 
   return response.json(clients[indexPurchaseList]);
 };
+const updateList = (request: Request, response: Response): Response => {
+  const id: number = request.listIndex.indexArrayClient;
+  const itemID = request.listIndex.indexArrayClient;
+  console.log("itemID", itemID);
+  const itemIndex = clients[id].data.findIndex(
+    (element) => element.name === request.params.index
+  );
+  const newItem = {
+    ...clients[id].data[itemIndex],
+    ...request.body,
+  };
+  console.log("eu sou o newitem", newItem);
+  clients[id].data[itemIndex] = newItem;
 
-export { createClient, readClients, deleteListCompleted, getOneListId };
+  return response.status(200).json(clients[id].data[itemIndex]);
+};
+const deleteOneListSale = (request: Request, response: Response) => {
+  clients[request.listIndex.indexArrayClient].data.splice(
+    request.listIndex.indexArrayClient,
+    1
+  );
+  response.status(201).json();
+};
+export {
+  createClient,
+  readClients,
+  deleteListCompleted,
+  getOneListId,
+  updateList,
+  deleteOneListSale,
+};
