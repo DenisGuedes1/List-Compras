@@ -85,27 +85,38 @@ const updateList = (request: Request, response: Response): Response => {
   const itemIndex = clients[id].data.findIndex(
     (element) => element.name === request.params.index
   );
+  if (typeof request.body.quantity !== "string") {
+    return response.status(400).json({
+      message: "Verifique se nao esta passando numero ao inves de string",
+    });
+  }
   const newItem = {
     ...clients[id].data[itemIndex],
     ...request.body,
   };
-  console.log("eu sou o newitem", newItem);
+
   clients[id].data[itemIndex] = newItem;
 
   return response.status(200).json(clients[id].data[itemIndex]);
 };
-const deleteOneListSale = (request: Request, response: Response) => {
-  clients[request.listIndex.indexArrayClient].data.splice(
-    request.listIndex.indexArrayClient,
-    1
-  );
-  response.status(201).json();
+const deleteOneItemList = (request: Request, response: Response) => {
+  const { name, id } = request.params;
+  const stringId = +id;
+  const oneItemDel = clients.find((elem) => elem.id === stringId);
+  if (!oneItemDel) {
+    return response.status(404).send();
+  }
+  const DB = oneItemDel.data;
+  const indexKeyList = DB.findIndex((elem) => elem.name === name);
+  DB.splice(indexKeyList, 1);
+  return response.status(204).send;
 };
+
 export {
   createClient,
   readClients,
   deleteListCompleted,
   getOneListId,
   updateList,
-  deleteOneListSale,
+  deleteOneItemList,
 };

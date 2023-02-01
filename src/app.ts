@@ -2,7 +2,7 @@ import express, { Application, json } from "express";
 import {
   createClient,
   deleteListCompleted,
-  deleteOneListSale,
+  deleteOneItemList,
   getOneListId,
   readClients,
   updateList,
@@ -11,6 +11,7 @@ import {
   midleWare,
   seachIndexList,
   verifyExistencieList,
+  verifyParam,
   verifyStringOrNumber,
 } from "./midleare";
 
@@ -21,7 +22,12 @@ app.post("/purchaseList", midleWare, verifyStringOrNumber, createClient);
 app.get("/purchaseList", midleWare, readClients);
 app.get("/purchaseList/:id", verifyExistencieList, getOneListId);
 app.delete("/purchaseList/:id", verifyExistencieList, deleteListCompleted);
-app.delete("/purchaseList/:id/:index", seachIndexList, deleteOneListSale);
+app.delete(
+  "/purchaseList/:id/:name",
+  seachIndexList,
+  verifyParam,
+  deleteOneItemList
+);
 app.patch("/purchaseList/:id/:index", verifyExistencieList, updateList);
 
 const PORT: number = 3000;

@@ -102,6 +102,19 @@ const veifybodyOrString = (
   }
   return next();
 };
+const verifyParam = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Response | void => {
+  if (typeof request.params.name !== "string") {
+    return response.status(400).json({
+      message: "verifique os campos",
+    });
+  }
+
+  return next();
+};
 export {
   midleWare,
   verifyStringOrNumber,
@@ -109,4 +122,5 @@ export {
   verifyExistencieList,
   seachIndexList,
   veifybodyOrString,
+  verifyParam,
 };
