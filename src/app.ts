@@ -8,6 +8,7 @@ import {
   updateList,
 } from "./logic";
 import {
+  checkNameItem,
   midleWare,
   seachIndexList,
   verifyExistencieList,
@@ -26,6 +27,7 @@ app.delete(
   "/purchaseList/:id/:name",
   seachIndexList,
   verifyParam,
+  checkNameItem,
   deleteOneItemList
 );
 app.patch("/purchaseList/:id/:index", verifyExistencieList, updateList);

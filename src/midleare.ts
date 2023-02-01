@@ -115,8 +115,25 @@ const verifyParam = (
 
   return next();
 };
+const checkNameItem = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  request.body == undefined &&
+    response.status(400).json({ message: "body can not send empty" });
+  const { data } = clients[request.listIndex.indexArrayClient];
+  const index = data.findIndex((el) => el.name === request.params.name);
+  index >= 0
+    ? (request.listIndex.indexArrayClient = index)
+    : response
+        .status(404)
+        .json({ message: `${request.params.name} not found` });
+  next();
+};
 export {
   midleWare,
+  checkNameItem,
   verifyStringOrNumber,
   verifyStringOrNumberValor,
   verifyExistencieList,
